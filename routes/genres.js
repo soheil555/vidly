@@ -1,8 +1,7 @@
 //Libraries
 const express = require("express");
 const mongoose = require("mongoose");
-const Joi = require("joi");
-
+const {Genre,validate} = require("../models/genre");
 
 //Mongoose connect to Data Base
 mongoose.connect("mongodb://localhost:27017/vidly",{useNewUrlParser:true,useUnifiedTopology:true}).
@@ -13,27 +12,6 @@ catch((err)=>{
     console.log(`[-]Connection failed: ${err.message}`);
 });
 
-
-//Mongoose Schema & model
-const genreSchema = new mongoose.Schema({
-    name:{
-        type:String,
-        required:true,
-        minlength:5,
-        maxlength:20,
-    }
-});
-
-const Genre = mongoose.model('Genre',genreSchema);
-
-
-//Joi Schema
-const genreSchemaJoi = Joi.object({
-    name: Joi.string().
-    min(5).
-    max(20).
-    required()
-})
 
 
 
@@ -48,9 +26,28 @@ router.get("/",async (req,res) => {
 
 });
 
+
+router.post("/", async (req,res)=>{
+
+    const data = validate(req.body);
+    if(data.error)
+        return res.send(data.error.details[0].message).status(400)
+
+    let genre = new Genre(data.value);
+    genre = await genre.save();
+    return res.send(genre);
+
+});
+
+
 router.get("/:id",async (req,res) =>{
 
     const {id} = req.params;
+
+    if(!id.match(/^[0-9a-fA-F]{24}$/)){
+        return res.send("Bad Id.").status(400);
+    }
+
     const genre = await Genre.findById(id);
     if(!genre) return res.send("Not found.").status(404);
     res.send(genre);
@@ -58,25 +55,16 @@ router.get("/:id",async (req,res) =>{
 });
 
 
-router.post("/", async (req,res)=>{
-
-    const data = validateGenre(req.body);
-    if(data.error)
-        return res.send(data.error.details[0].message).status(400)
-    
-
-    const genre = new Genre(data.value);
-    genre = await genre.save();
-    return res.send(genre);
-
-});
-
 router.put("/:id",async (req,res) =>{
 
     const {id} = req.params;
 
+    if(!id.match(/^[0-9a-fA-F]{24}$/)){
+        return res.send("Bad Id.").status(400);
+    }
 
-    const data = validateGenre(req.body);
+
+    const data = validate(req.body);
     if(data.error)
         return res.send(data.error.details[0].message).status(400);
 
@@ -90,6 +78,11 @@ router.delete("/:id",async (req,res)=>{
 
     const {id} = req.params;
 
+
+    if(!id.match(/^[0-9a-fA-F]{24}$/)){
+        return res.send("Bad Id.").status(400);
+    }
+
     const genre = await Genre.findByIdAndRemove(id);
     if(genre)  return res.send(genre);
     return res.send("Not found.").status(404);
@@ -97,13 +90,6 @@ router.delete("/:id",async (req,res)=>{
 
 })
 
-
-
-function validateGenre(genre) {
-
-    return genreSchemaJoi.validate(genre);
-
-}
 
 
 module.exports = router;
