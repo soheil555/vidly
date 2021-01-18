@@ -5,6 +5,7 @@ const express = require('express');
 //Route files
 const genres = require("./routes/genres");
 const customers = require("./routes/customers");
+const movies = require("./routes/movies");
 
 //Enviroment Variables
 const port = process.env.PORT || 3000
@@ -16,6 +17,7 @@ app.use(express.json());
 
 app.use("/api/genres",genres);
 app.use("/api/customers",customers);
+app.use("/api/movies",movies);
 
 app.listen(port,()=>{
     console.log(`[+]Started at port ${port}`)

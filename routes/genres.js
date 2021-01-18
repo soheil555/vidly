@@ -84,9 +84,9 @@ router.delete("/:id",async (req,res)=>{
     }
 
     const genre = await Genre.findByIdAndRemove(id);
-    if(genre)  return res.send(genre);
-    return res.send("Not found.").status(404);
-    
+    if(!genre) return res.send("Not found.").status(404);
+
+    res.send(genre);    
 
 })
 
