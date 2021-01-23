@@ -42,9 +42,6 @@ router.post("/",async (req,res)=>{
     const data = validate(req.body);
     if(data.error) return res.send(data.error.details[0].message).status(400);
 
-    const genreId = data.value.genreId;
-    if(!genreId.match(/^[0-9a-fA-F]{24}$/))
-        return res.send("Bad Genre Id.").status(400);
     
     const genre = await Genre.findById(genreId);
     if(!genre) return res.send("Genre Not Found.").status(404);

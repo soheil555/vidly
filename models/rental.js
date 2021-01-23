@@ -69,8 +69,8 @@ const Rental = mongoose.model("rental",rentalSchema);
 
 const rentalSchemaJoi = Joi.object({
 
-        customerId : Joi.string().required().min(24).max(24),
-        movieId : Joi.string().required().min(24).max(24)
+        customerId : Joi.objectId().required().min(24).max(24),
+        movieId : Joi.objectId().required().min(24).max(24)
 
 
 });

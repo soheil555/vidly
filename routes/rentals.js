@@ -20,7 +20,7 @@ const router = express.Router();
 
 router.get("/",async (req,res) =>{
 
-    const renatals = await Rental.find().sort("-dateOut");
+    const rentals = await Rental.find().sort("-dateOut");
     res.send(rentals);
 
 });
@@ -31,14 +31,7 @@ router.post("/",async (req,res) =>{
     if(data.error) return res.send(data.error.details[0].message).status(400);
 
     const customerId = data.value.customerId;
-    const movieId = data.value.movieId;
-
-    if(!customerId.match(/^[0-9a-fA-F]{24}$/))
-        return res.send("Bad Customer Id.").status(400);
-
-
-    if(!movieId.match(/^[0-9a-fA-F]{24}$/))
-        return res.send("Bad Movie Id.").status(400);        
+    const movieId = data.value.movieId;      
     
 
     const customer =await Customer.findById(customerId);

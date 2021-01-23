@@ -29,7 +29,7 @@ const movieSchema = new mongoose.Schema({
 const movieSchemaJoi =new Joi.object({
 
         title:Joi.string().required().min(5).max(100),
-        genreId:Joi.string().required().min(24).max(24),
+        genreId:Joi.objectId().required().min(24).max(24),
         numberInStock:Joi.number().required().min(0).max(100),
         dailyRentalRate:Joi.number().required().min(0).max(100)
 
