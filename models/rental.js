@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
-const { number } = require("joi");
-
 
 const rentalSchema = new mongoose.Schema({
 
