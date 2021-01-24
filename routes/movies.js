@@ -1,16 +1,6 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const {Movie,validate} = require("../models/movie");
 const {Genre} = require("../models/genre");
-
-
-mongoose.connect("mongodb://localhost:27017/vidly",{useNewUrlParser:true,useUnifiedTopology:true}).
-then(() =>{
-    console.log("[+]Connected to DB");
-}).
-catch((err)=>{
-    console.log("[-]Connection failed:",err.message);
-});
 
 
 const router = express.Router();

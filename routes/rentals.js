@@ -6,13 +6,6 @@ const {Customer} = require("../models/customer");
 const {Movie} = require("../models/movie");
 
 
-mongoose.connect("mongodb://localhost:27017/vidly",{useNewUrlParser:true,useUnifiedTopology:true}).
-then(()=>{
-    console.log("[+]Connected to DB.");
-}).catch(err => {
-    console.log(`[-]Connected to DB failed ${err.message}`);
-});
-
 Fawn.init(mongoose);
 
 const router = express.Router();
@@ -65,6 +58,8 @@ router.post("/",async (req,res) =>{
     const task = Fawn.Task();
 
     //TODO : add ability to validate on update
+    
+    //TODO : change transaction method
 
     task.save("rentals",rental)
     .update("movies",{_id:movie._id},
