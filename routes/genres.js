@@ -1,7 +1,7 @@
 //Libraries
 const express = require("express");
 const {Genre,validate} = require("../models/genre");
-
+const authRequired = require("../middleware/authRequired");
 
 
 
@@ -18,7 +18,7 @@ router.get("/",async (req,res) => {
 });
 
 
-router.post("/", async (req,res)=>{
+router.post("/",authRequired,async (req,res)=>{
 
     const data = validate(req.body);
     if(data.error)
@@ -46,7 +46,7 @@ router.get("/:id",async (req,res) =>{
 });
 
 
-router.put("/:id",async (req,res) =>{
+router.put("/:id",authRequired,async (req,res) =>{
 
     const {id} = req.params;
 
@@ -65,7 +65,7 @@ router.put("/:id",async (req,res) =>{
 
 });
 
-router.delete("/:id",async (req,res)=>{
+router.delete("/:id",authRequired,async (req,res)=>{
 
     const {id} = req.params;
 
