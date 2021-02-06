@@ -2,18 +2,19 @@ const express = require("express");
 const _ = require("loadsh");
 const bcrypt = require("bcrypt");
 const {User,validate} = require("../models/user");
-const jwt = require("jsonwebtoken");
-const config = require("config");
-
+const authRequired = require("../middleware/authRequired")
 const router = express.Router();
 
 
-router.get("/",async (req,res) => {
+router.get("/me",authRequired,async (req,res) => {
 
-    const users = await User.find();
-    res.send(users);
+    const user = await User.findById(req.user.id).select("-password");
+    res.send(user);
+
+
 
 });
+
 
 
 router.post("/",async (req,res) => {
