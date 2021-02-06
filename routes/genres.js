@@ -2,6 +2,7 @@
 const express = require("express");
 const {Genre,validate} = require("../models/genre");
 const authRequired = require("../middleware/authRequired");
+const isAdmin = require("../middleware/isAdmin");
 
 
 
@@ -65,7 +66,7 @@ router.put("/:id",authRequired,async (req,res) =>{
 
 });
 
-router.delete("/:id",authRequired,async (req,res)=>{
+router.delete("/:id",[authRequired,isAdmin],async (req,res)=>{
 
     const {id} = req.params;
 

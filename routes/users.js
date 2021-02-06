@@ -11,8 +11,6 @@ router.get("/me",authRequired,async (req,res) => {
     const user = await User.findById(req.user.id).select("-password");
     res.send(user);
 
-
-
 });
 
 
@@ -26,7 +24,7 @@ router.post("/",async (req,res) => {
     if(user) return res.send("User with this email exists.").status(400);
 
     
-    user = new User(_.pick(req.body,['name','email','password']));
+    user = new User(_.pick(req.body,['name','email','password','isAdmin']));
 
     const salt = await bcrypt.genSalt();
     user.password = await bcrypt.hash(user.password,salt);
@@ -37,7 +35,7 @@ router.post("/",async (req,res) => {
     const token = user.generateJwt();
 
 
-    res.set("auth-token",token).send(_.pick(user,['name','email','_id']));
+    res.set("auth-token",token).send(_.pick(user,['name','email','_id','isAdmin']));
 });
 
 
