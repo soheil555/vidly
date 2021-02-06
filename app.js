@@ -2,6 +2,14 @@
 const mongoose = require("mongoose");
 const express = require('express');
 const Joi = require("joi");
+const config = require('config');
+
+
+if(!config.get("jwtPrivateKey")){
+    console.error("[-]Can't find vidly_jwtPrivateKey variable exiting...");
+    process.exit(1);
+}
+
 
 // TODO : how one import effect other files
 Joi.objectId = require("joi-objectid")(Joi);
