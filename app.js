@@ -1,9 +1,9 @@
 //Libraries
+require("express-async-errors");
 const mongoose = require("mongoose");
 const express = require('express');
 const Joi = require("joi");
 const config = require('config');
-
 
 if(!config.get("jwtPrivateKey")){
     console.error("[-]Can't find vidly_jwtPrivateKey variable exiting...");
@@ -31,11 +31,19 @@ const users = require("./routes/users");
 const rentals = require("./routes/rentals");
 const auth = require("./routes/auth");
 
+
+//Middlewares
+const error = require("./middleware/error");
+
+
 //Enviroment Variables
-const port = process.env.PORT || 3000
+const port = config.get("PORT");
 
 const app = express();
 app.use(express.json());
+
+
+//TODO : status codes are all wrong.
 
 app.use("/api/genres",genres);
 app.use("/api/customers",customers);
@@ -43,6 +51,8 @@ app.use("/api/movies",movies);
 app.use("/api/rentals",rentals);
 app.use("/api/users",users);
 app.use("/api/auth",auth);
+
+app.use(error);
 
 app.listen(port,()=>{
     console.log(`[+]Started at port ${port}`)

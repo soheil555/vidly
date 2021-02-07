@@ -5,16 +5,13 @@ const authRequired = require("../middleware/authRequired");
 const isAdmin = require("../middleware/isAdmin");
 
 
-
-
-
 const router = express.Router();
 
 
 router.get("/",async (req,res) => {
 
-        const genres = await Genre.find().select({name:1});
-        res.send(genres);
+    const genres = await Genre.find().select({name:1});
+    res.send(genres);
 
 });
 
