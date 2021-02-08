@@ -1,5 +1,7 @@
 //Libraries
 require("express-async-errors");
+const winston = require("winston");
+require("winston-mongodb");
 const mongoose = require("mongoose");
 const express = require('express');
 const Joi = require("joi");
@@ -9,6 +11,26 @@ if(!config.get("jwtPrivateKey")){
     console.error("[-]Can't find vidly_jwtPrivateKey variable exiting...");
     process.exit(1);
 }
+
+
+winston.add(new winston.transports.File({"filename":"logfile.log"}));
+winston.add(new winston.transports.MongoDB({db:"mongodb://localhost:27017/vidly"}));
+
+
+
+process.on('uncaughtException',(ex) =>{
+
+    winston.error(ex.message);
+    process.exit(1);
+
+});
+
+
+process.on('unhandledRejection',(ex) => {
+
+    throw ex;
+    
+});
 
 
 // TODO : how one import effect other files
@@ -21,6 +43,9 @@ then(()=>{
 }).catch(err => {
     console.log(`[-]Connected to DB failed ${err.message}`);
 });
+
+
+
 
 
 //Route files

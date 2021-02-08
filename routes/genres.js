@@ -10,6 +10,9 @@ const router = express.Router();
 
 router.get("/",async (req,res) => {
 
+
+    throw new Error("an error through getting genres.");
+
     const genres = await Genre.find().select({name:1});
     res.send(genres);
 
