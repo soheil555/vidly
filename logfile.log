@@ -5,3 +5,4 @@
 {"message":"innnnternal error","level":"error"}
 {"message":"errrror","level":"error"}
 {"message":"errrror","level":"error"}
+{"message":"[+]Connected to DB.","level":"info"}
