@@ -10,9 +10,6 @@ const router = express.Router();
 
 router.get("/",async (req,res) => {
 
-
-    throw new Error("an error through getting genres.");
-
     const genres = await Genre.find().select({name:1});
     res.send(genres);
 
@@ -37,11 +34,11 @@ router.get("/:id",async (req,res) =>{
     const {id} = req.params;
 
     if(!id.match(/^[0-9a-fA-F]{24}$/)){
-        return res.send("Bad Id.").status(400);
+        return res.status(400).send("Bad Id.");
     }
 
     const genre = await Genre.findById(id);
-    if(!genre) return res.send("Not found.").status(404);
+    if(!genre) return res.status(404).send("Not found.");
     res.send(genre);
 
 });

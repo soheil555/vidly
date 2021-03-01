@@ -4,7 +4,6 @@ const config = require('config');
 
 
 //TODO : status codes are all wrong.
-// TODO : how one import effect other files
 
 
 const app = express();
@@ -19,6 +18,9 @@ require("./startup/routes")(app);
 
 const port = config.get("PORT");
 
-app.listen(port,()=>{
+const server =app.listen(port,()=>{
     console.log(`[+]Started at port ${port}`)
 });
+
+
+module.exports = server;
