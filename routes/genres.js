@@ -21,7 +21,7 @@ router.post("/",authRequired,async (req,res)=>{
 
     const data = validate(req.body);
     if(data.error)
-        return res.send(data.error.details[0].message).status(400)
+        return res.status(400).send(data.error.details[0].message);
 
     let genre = new Genre(data.value);
     genre = await genre.save();

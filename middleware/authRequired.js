@@ -7,7 +7,7 @@ module.exports = function (req,res,next){
 
 
     const token = req.header('auth-token');
-    if(!token)  return res.send("No authentication key provided.").status(401);
+    if(!token)  return res.status(401).send("No authentication key provided.");
 
 
 
@@ -18,7 +18,7 @@ module.exports = function (req,res,next){
 
     }
     catch(exp){
-        res.send("Invalid authentication key.").status(400);
+        res.status(400).send("Invalid authentication key.");
     }
 
 
