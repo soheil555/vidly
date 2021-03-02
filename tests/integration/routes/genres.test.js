@@ -13,6 +13,7 @@ describe("GET requests.",()=>{
     afterEach(()=>{
         server.close();
         Genre.collection.deleteMany({});
+        User.collection.deleteMany({});
     });
 
     describe("GET /api/genres",()=>{
@@ -78,22 +79,44 @@ describe("GET requests.",()=>{
     describe("POST /api/genre",()=>{
 
 
+        let token;
+        const genre = {};
+
+
+        const exec = () =>{
+
+            return request(server).post("/api/genres").send(genre).set("auth-token",token);
+
+        }
+
+
+
+
+        beforeEach(()=>{
+
+            token = new User().generateJwt();
+            genre.name = "genre1";
+
+        });
+
+
+
+
         it("should return 401 if user is not authenticated.",async ()=>{
 
-           const response = await request(server).post("/api/genres");
+           token = "";
+
+           const response = await exec();
+
            expect(response.status).toBe(401);
 
         });
 
         it("should return 400 if genre length is less than 5.",async ()=>{
 
-            const token = new User().generateJwt()
+            genre.name = "1234";
 
-            const genre = {
-                name : "1234"
-            }
-
-            const response = await request(server).post("/api/genres").send(genre).set("auth-token",token);
+            const response = await exec();
 
             expect(response.status).toBe(400);
 
@@ -102,13 +125,9 @@ describe("GET requests.",()=>{
 
         it("should return 400 if genre length is more than 50.",async ()=>{
 
-            const token = new User().generateJwt();
+            genre.name = Array(52).join("a");
 
-            const genre = {
-                name : Array(52).join("a")
-            };
-
-            const response = await request(server).post("/api/genres").send(genre).set("auth-token",token);
+            const response = await exec();
 
             expect(response.status).toBe(400);
 
@@ -116,37 +135,25 @@ describe("GET requests.",()=>{
 
         it("should save the genre in data base if it is okey.",async ()=>{
 
-            const token = new User().generateJwt();
+            exec();
 
-            const genre = {
-                name : "genre1"
-            };
+            const selectedGenre = await Genre.find({"name":"genre1"});
 
-            request(server).post("/api/genres").send(genre).set("auth-token",token);
-
-            const selectedGenre = await Genre.find(genre);
             expect(selectedGenre).not.toBeNull();
 
         });
 
         it("should return created genre if everything is okey.",async ()=>{
+            
+            const response = await exec();
 
-            const token = new User().generateJwt();
+            expect(response.body).toHaveProperty("_id");
+            expect(response.body).toHaveProperty("name","genre1");
 
-            const genre = {
-                name : "genre1"
-            };
-
-            const response = await request(server).post("/api/genres").send(genre).set("auth-token",token);
-
-            expect(response.body).toMatchObject(genre);
-
-        })
+        });
 
 
     });
-
-
 
 
 
