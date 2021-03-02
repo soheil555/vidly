@@ -3,6 +3,7 @@ const express = require("express");
 const {Genre,validate} = require("../models/genre");
 const authRequired = require("../middleware/authRequired");
 const isAdmin = require("../middleware/isAdmin");
+const isIdValid = require("../middleware/isIdValid");
 
 
 const router = express.Router();
@@ -29,13 +30,9 @@ router.post("/",authRequired,async (req,res)=>{
 });
 
 
-router.get("/:id",async (req,res) =>{
+router.get("/:id",isIdValid,async (req,res) =>{
 
     const {id} = req.params;
-
-    if(!id.match(/^[0-9a-fA-F]{24}$/)){
-        return res.status(400).send("Bad Id.");
-    }
 
     const genre = await Genre.findById(id);
     if(!genre) return res.status(404).send("Not found.");
@@ -44,14 +41,10 @@ router.get("/:id",async (req,res) =>{
 });
 
 
-router.put("/:id",authRequired,async (req,res) =>{
+router.put("/:id",[authRequired,isIdValid],async (req,res) =>{
+
 
     const {id} = req.params;
-
-    if(!id.match(/^[0-9a-fA-F]{24}$/)){
-        return res.send("Bad Id.").status(400);
-    }
-
 
     const data = validate(req.body);
     if(data.error)
@@ -63,14 +56,9 @@ router.put("/:id",authRequired,async (req,res) =>{
 
 });
 
-router.delete("/:id",[authRequired,isAdmin],async (req,res)=>{
+router.delete("/:id",[authRequired,isAdmin,isIdValid],async (req,res)=>{
 
     const {id} = req.params;
-
-
-    if(!id.match(/^[0-9a-fA-F]{24}$/)){
-        return res.send("Bad Id.").status(400);
-    }
 
     const genre = await Genre.findByIdAndRemove(id);
     if(!genre) return res.send("Not found.").status(404);
